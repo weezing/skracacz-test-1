@@ -1,13 +1,21 @@
+language:
+- ruby
 rvm:
 - 2.7.2
-language: ruby
 cache:
-  - bundler
+- bundler
 services:
-  - postgresql
+- postgresql
 before_script:
-  - bundle install
-  - bundle exec rake db:create
-  - bundle exec rake db:schema:load
+- bundle install
+- bundle exec rake db:create
+- bundle exec rake db:schema:load
 script:
-  - bundle exec rspec
+- bundle exec rspec
+deploy:
+  provider: heroku
+  api_key:
+    secure: XA8NBedlU4X0ZaRBCd2y9Rvyb8EKCQBaxWxQLZb8Sb6cq5FITm8c0hu+PtVFX0MUdcKQTu4U0ncLjK3FLGt5VCZDmjdfhWmFZ5o0k97kZkjgOpF+h9YkqDaf/6VgOWSnSfHgH8r2wORkDY69gCQa7Ih5V0BUFm02yJlchmC9zkNd7v1TcPlzLefaSo/cThygwqZjol7WeHY474qvpw9K3O74qzRWZuKv82YiXxPd47zucEXeRq4FBgIXMOD/OB9H4qpkH4S5/sLoGTHLnP5CPDl9pRmybxYCJ73deiU/63XmLuBMj8lqB0kCA3m7XwcFnRMBnxtO6iIv7lxv0ZztcGmJKc2Rl9IVStkPIo6JSESJ8aJtiPjvQWPGm5KaD9j3ZcRc7DV+ENHc0tPEZ5LM2AdS0REeJOyju/OkQlpVLDmZV4NSUGEMGFbn9QIStFXnCENBVLSLPV9rdjatdw/xMKFUXQmlTCsxDhNfk7jIBn4HRJxpKo1XYSdY7ISzibpqbBSkZ/5A8L9VB0G4JI+Koy/Q4rgvsu6o4u2orLVv0TTuYij8Tob695LDXjVmyyR1T7gJHnTVUUKG2Ydfs5ZDta5RcUCHPHnHKgkMT2KIY02ov50rw0VOa4WBf+k1eXszpgZIL7Q/zKnROwDtuc8Kk0xv6TxC2sm5K6jAu2u1Ij0=
+  app: skracacz-test-1
+  on:
+    repo: weezing/skracacz-test-1
