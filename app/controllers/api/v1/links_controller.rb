@@ -1,6 +1,7 @@
 class Api::V1::LinksController < Api::V1::BaseController
   def create
-    service = Api::V1::CreateLinkService.new(create_params.merge(slug: SecureRandom.hex(10)))
+    form = Api::V1::CreateLinkForm.new(create_params.merge(slug: SecureRandom.hex(10)))
+    service = Api::V1::CreateLinkService.new(form)
 
     if service.call
       render json: service.link.to_json, status: :created
