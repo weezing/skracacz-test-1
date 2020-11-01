@@ -1,6 +1,7 @@
 class Api::V1::LinksController < Api::V1::BaseController
   def create
-    form = Api::V1::CreateLinkForm.new(create_params.merge(slug: SecureRandom.hex(10)))
+    slug = SlugGenerator.prepare_slug
+    form = Api::V1::CreateLinkForm.new(create_params.merge(slug: slug))
     service = Api::V1::CreateLinkService.new(form)
 
     if service.call

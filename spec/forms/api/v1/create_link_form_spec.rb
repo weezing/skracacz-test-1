@@ -1,4 +1,4 @@
-describe CreateLinkForm do
+describe Api::V1::CreateLinkForm do
   it 'valid' do
     expected_attributes = {
       original_link: 'https://www.google.com',
