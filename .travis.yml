@@ -1,0 +1,13 @@
+rvm:
+- 2.7.2
+language: ruby
+cache:
+  - bundler
+services:
+  - postgresql
+before_script:
+  - bundle install
+  - bundle exec rake db:create
+  - bundle exec rake db:schema:load
+script:
+  - bundle exec rspec
