@@ -1,6 +1,9 @@
 RSpec.describe Api::V1::LinksController, type: :request do
   describe '#create' do
     it 'creates a new link' do
+      allow_any_instance_of(described_class)
+        .to receive(:shortened_link_base_url).and_return('http://www.example.com/')
+
       params = {
         data: {
           type: 'links',
@@ -29,8 +32,7 @@ RSpec.describe Api::V1::LinksController, type: :request do
 
       links = ActiveSupport::JSON.decode(response.body)['links']
 
-      expect(links['shortened_link'])
-        .to eq(Rails.application.credentials[Rails.env.to_sym][:shortener_base_url] + link.slug)
+      expect(links['shortened_link']).to eq('http://www.example.com/' + link.slug)
     end
 
     it 'returns validation error for invalid params' do

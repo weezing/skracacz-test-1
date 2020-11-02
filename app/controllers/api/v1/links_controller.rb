@@ -13,7 +13,7 @@ class Api::V1::LinksController < Api::V1::BaseController
       render json: LinksSerializer.new(
         link,
         links: {
-          shortened_link: shortened_link(link)
+          shortened_link: shortened_link_base_url + link.slug
         }
       ), status: :created
     else
@@ -27,7 +27,7 @@ class Api::V1::LinksController < Api::V1::BaseController
     jsonapi_params.permit(:original_link)
   end
 
-  def shortened_link(link)
-    Rails.application.credentials[Rails.env.to_sym][:shortener_base_url] + link.slug
+  def shortened_link_base_url
+    Rails.application.credentials[Rails.env.to_sym][:shortener_base_url].to_s
   end
 end
