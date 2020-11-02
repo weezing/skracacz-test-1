@@ -4,6 +4,7 @@ class Api::V1::CreateLinkForm
   attr_accessor :original_link, :slug
 
   validates :original_link, presence: true
+  validates :original_link, url: true
   validates :slug, presence: true
 
   def attributes

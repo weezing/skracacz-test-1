@@ -26,6 +26,17 @@ describe Api::V1::CreateLinkForm do
       expect(form.errors[:original_link]).to include("can't be blank")
     end
 
+    it 'original_link: format' do
+      params = {
+        original_link: 'www.google',
+        slug: 'sLUg99'
+      }
+      form = described_class.new(params)
+
+      expect(form.valid?).to eq false
+      expect(form.errors[:original_link]).to include('is not a valid URL')
+    end
+
     it 'slug: presence' do
       params = {
         original_link: 'https://www.google.com',

@@ -34,7 +34,7 @@ RSpec.describe Api::V1::LinksController, type: :request do
         data: {
           type: 'links',
           attributes: {
-            original_link: 'http://www.google'
+            original_link: 'www.google'
           }
         }
       }

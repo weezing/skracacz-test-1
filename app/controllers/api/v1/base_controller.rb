@@ -12,4 +12,8 @@ class Api::V1::BaseController < ActionController::API
 
     render(json: { errors: [error] }, status: code)
   end
+
+  def render_validation_errors(object)
+    render(json: { errors: ValidationSerializer.new(object).errors }, status: 422)
+  end
 end

@@ -2,12 +2,20 @@ class Api::V1::LinksController < Api::V1::BaseController
   def create
     slug = SlugGenerator.prepare_slug
     form = Api::V1::CreateLinkForm.new(create_params.merge(slug: slug))
+
+    render_validation_errors(form) && return unless form.valid?
+
     service = Api::V1::CreateLinkService.new(form)
 
     if service.call
-      render json: service.link.to_json, status: :created
+      link = service.link
+
+      render json: LinksSerializer.new(
+        link,
+        links: { shortened_link: request.base_url + link.slug }
+      ), status: :created
     else
-      render_error(422, 'Validation Error')
+      render_error(422, service.error)
     end
   end
 
