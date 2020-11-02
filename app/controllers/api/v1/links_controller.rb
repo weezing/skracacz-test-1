@@ -12,7 +12,7 @@ class Api::V1::LinksController < Api::V1::BaseController
 
       render json: LinksSerializer.new(
         link,
-        links: { shortened_link: request.base_url + link.slug }
+        links: { shortened_link: 'http://localhost:3000/' + link.slug }
       ), status: :created
     else
       render_error(422, service.error)

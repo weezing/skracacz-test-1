@@ -26,7 +26,10 @@ RSpec.describe Api::V1::LinksController, type: :request do
       expect(data['type']).to eq('links')
       expect(data['attributes']['original_link']).to eq(link.original_link)
       expect(data['attributes']['slug']).to eq(link.slug)
-      expect(data['links']['self']).to eq('http://localhost:3000/' + link.slug)
+
+      links = ActiveSupport::JSON.decode(response.body)['links']
+
+      expect(links['shortened_link']).to eq('http://localhost:3000/' + link.slug)
     end
 
     it 'returns validation error for invalid params' do
