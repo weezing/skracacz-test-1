@@ -29,7 +29,8 @@ RSpec.describe Api::V1::LinksController, type: :request do
 
       links = ActiveSupport::JSON.decode(response.body)['links']
 
-      expect(links['shortened_link']).to eq('http://localhost:3000/' + link.slug)
+      expect(links['shortened_link'])
+        .to eq(Rails.application.credentials[Rails.env.to_sym][:shortener_base_url] + link.slug)
     end
 
     it 'returns validation error for invalid params' do

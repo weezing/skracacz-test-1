@@ -12,7 +12,9 @@ class Api::V1::LinksController < Api::V1::BaseController
 
       render json: LinksSerializer.new(
         link,
-        links: { shortened_link: 'http://localhost:3000/' + link.slug }
+        links: {
+          shortened_link: shortened_link(link)
+        }
       ), status: :created
     else
       render_error(422, service.error)
@@ -23,5 +25,9 @@ class Api::V1::LinksController < Api::V1::BaseController
 
   def create_params
     jsonapi_params.permit(:original_link)
+  end
+
+  def shortened_link(link)
+    Rails.application.credentials[Rails.env.to_sym][:shortener_base_url] + link.slug
   end
 end
