@@ -1,4 +1,6 @@
 class Api::V1::LinksController < Api::V1::BaseController
+  before_action :authenticate_admin, only: :destroy
+
   def create
     slug = SlugGenerator.prepare_slug
     form = Api::V1::CreateLinkForm.new(create_params.merge(slug: slug))
@@ -21,7 +23,30 @@ class Api::V1::LinksController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    link = Link.find_by(slug: params[:id])
+
+    render_error(404, 'Not Found') and return unless link
+
+    service = Api::V1::DestroyLinkService.new(link)
+
+    if service.call
+      render(nothing: true, status: :no_content)
+    else
+      render_error(400, 'Bad Request')
+    end
+  end
+
   private
+
+  def authenticate_admin
+    render_error(401, 'Unauthorized') and return unless
+      params[:admin_api_key] && params[:admin_api_key] == admin_api_key
+  end
+
+  def admin_api_key
+    ENV['admin_api_key'] || Rails.application.credentials[Rails.env.to_sym][:admin_api_key]
+  end
 
   def create_params
     jsonapi_params.permit(:original_link)

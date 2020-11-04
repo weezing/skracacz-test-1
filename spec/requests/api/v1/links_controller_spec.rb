@@ -55,4 +55,54 @@ RSpec.describe Api::V1::LinksController, type: :request do
       expect(Link.count).to eq 0
     end
   end
+
+  describe '#destroy' do
+    it 'deletes link' do
+      link = create(:link, slug: 'sLuG99')
+
+      delete "/api/v1/links/#{link.slug}?admin_api_key=adminapikey"
+
+      expect(response.status).to eq(204)
+      expect(Link.count).to eq(0)
+    end
+
+    it 'returns not found for improper link slug' do
+      create(:link, slug: 'sLuG99')
+
+      delete '/api/v1/links/wrongslug?admin_api_key=adminapikey'
+
+      expect(response.status).to eq 404
+      errors = ActiveSupport::JSON.decode(response.body)['errors']
+      expect(errors.count).to eq 1
+      expect(errors.first['title']).to eq 'Not Found'
+
+      expect(Link.count).to eq(1)
+    end
+
+    it 'returns unauthorized error for bad admin api key provided' do
+      link = create(:link, slug: 'someslug')
+
+      delete '/api/v1/links/someslug?admin_api_key=wrongadminapikey'
+
+      expect(response.status).to eq 401
+      errors = ActiveSupport::JSON.decode(response.body)['errors']
+      expect(errors.count).to eq 1
+      expect(errors.first['title']).to eq 'Unauthorized'
+
+      expect(Link.count).to eq(1)
+    end
+
+    it 'returns unauthorized error for no admin api key provided' do
+      link = create(:link, slug: 'someslug')
+
+      delete '/api/v1/links/someslug'
+
+      expect(response.status).to eq 401
+      errors = ActiveSupport::JSON.decode(response.body)['errors']
+      expect(errors.count).to eq 1
+      expect(errors.first['title']).to eq 'Unauthorized'
+
+      expect(Link.count).to eq(1)
+    end
+  end
 end

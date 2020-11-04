@@ -1,4 +1,5 @@
 ENV['RAILS_ENV'] ||= 'test'
+ENV['admin_api_key'] = 'adminapikey'
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
