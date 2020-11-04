@@ -26,9 +26,13 @@ class Api::V1::LinksController < Api::V1::BaseController
 
     render_error(404, 'Not Found') and return unless link
 
-    link.destroy!
+    service = Api::V1::DestroyLinkService.new(link)
 
-    render(nothing: true, status: :no_content)
+    if service.call
+      render(nothing: true, status: :no_content)
+    else
+      render_error(400, 'Bad Request')
+    end
   end
 
   private
