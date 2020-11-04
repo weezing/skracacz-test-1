@@ -21,6 +21,16 @@ class Api::V1::LinksController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    link = Link.find_by(slug: params[:id])
+
+    render_error(404, 'Not Found') and return unless link
+
+    link.destroy!
+
+    render(nothing: true, status: :no_content)
+  end
+
   private
 
   def create_params
