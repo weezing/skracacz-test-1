@@ -1,0 +1,141 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "Skracacz Linków API"
+  description: Here you can shorten your loooong URL
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: localhost:3000
+basePath: /api/v1/
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+
+paths:
+  /links:
+    x-summary: Links
+    post:
+      summary: Create Link
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Request::LinkCreate'
+      responses:
+        201:
+          description: Link created
+          schema:
+            $ref: '#/definitions/Response::LinkCreated'
+        422:
+          description: 'Unprocessable Entity'
+          schema:
+            $ref: '#/definitions/Error::UnprocessableEntity'
+
+
+  /links/{slug}:
+    x-summary: Link
+    delete:
+      summary: Delete a Link
+      parameters:
+        - name: slug
+          type: string
+          in: path
+          required: true
+          x-example: 'dRk8CC'
+        - name: admin_api_key
+          type: string
+          in: query
+          required: true
+          x-example: 'AdMiNaPiKey'
+      responses:
+        204:
+          description: Link Deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error::Unauthorized'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error::NotFound'
+
+definitions:
+  Error::NotFound:
+    title: Not Found
+    type: object
+    example:
+      errors:
+        - title: Not Found
+
+  Error::Unauthorized:
+    title: Unauthorized
+    type: object
+    example:
+      errors:
+        - title: Unauthorized
+
+  Error::UnprocessableEntity:
+    title: Unprocessable Entity
+    type: object
+    example:
+      errors:
+        - code: 422
+          status: unprocessable_entity
+          title: Unprocessable Entity
+          detail: Something wrong has happened
+
+  Resource::Link:
+    type: object
+    properties:
+      id:
+        type: string
+        example: '3'
+      type:
+        type: string
+        example: 'links'
+      attributes:
+        type: object
+        properties:
+          original_link:
+            type: string
+            example: 'https://www.facebook.com'
+          slug:
+            type: string
+            example: 'dRk8CC'
+            
+  Response::LinkCreated:
+    type: object
+    properties:
+      data:
+        type: object
+        $ref: '#/definitions/Resource::Link'
+      links:
+        type: object
+        properties:
+          shortened_link:
+            type: string
+            example: 'http://www.example.com/dRk8CC'
+    required:
+      - data
+
+  Request::LinkCreate:
+    title: Create Link
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          type:
+            type: string
+            example: 'links'
+          attributes:
+            type: object
+            properties:
+              original_link:
+                type: string
+                example: 'https://www.facebook.com'
